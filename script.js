@@ -177,11 +177,14 @@ ${message}
             const whatsappNumber = '918217791266'; // Your testing phone number
             const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
             
-            // Open WhatsApp
+            // Open WhatsApp with pre-filled message
             window.open(whatsappUrl, '_blank');
             
-            // Show success message
-            showNotification('Opening WhatsApp with your message! 📱', 'success');
+            // Show success message with instructions
+            showNotification('WhatsApp opened! Please click send to deliver your message. 📱', 'success');
+            
+            // Alternative: Show a modal with the message for easy copying
+            showMessageModal(whatsappMessage);
             
             // Reset form
             this.reset();
@@ -547,6 +550,244 @@ function handleSwipe() {
             console.log('Swipe down detected');
         }
     }
+}
+
+// Message Modal for WhatsApp Integration
+function showMessageModal(message) {
+    // Remove existing modal
+    const existingModal = document.querySelector('.message-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'message-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📱 WhatsApp Message Ready</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Your message has been prepared for WhatsApp. You can:</p>
+                <div class="message-options">
+                    <button class="btn-copy-message">📋 Copy Message</button>
+                    <button class="btn-open-whatsapp">📱 Open WhatsApp</button>
+                </div>
+                <div class="message-preview">
+                    <h4>Message Preview:</h4>
+                    <div class="message-text">${message.replace(/\n/g, '<br>')}</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Add modal styles
+    const modalStyles = document.createElement('style');
+    modalStyles.textContent = `
+        .message-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            position: relative;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 0;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #FFD700;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1a1a1a;
+            border-radius: 13px 13px 0 0;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #1a1a1a;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+            color: #ffffff;
+        }
+        
+        .message-options {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn-copy-message, .btn-open-whatsapp {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #FFD700;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1a1a1a;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+        
+        .btn-copy-message:hover, .btn-open-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .message-preview {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .message-preview h4 {
+            margin: 0 0 0.5rem 0;
+            color: #FFD700;
+            font-size: 1rem;
+        }
+        
+        .message-text {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #ffffff;
+            white-space: pre-wrap;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                margin: 1rem;
+            }
+            
+            .message-options {
+                flex-direction: column;
+            }
+            
+            .btn-copy-message, .btn-open-whatsapp {
+                min-width: auto;
+            }
+        }
+    `;
+    document.head.appendChild(modalStyles);
+
+    // Add to page
+    document.body.appendChild(modal);
+
+    // Event listeners
+    const closeBtn = modal.querySelector('.modal-close');
+    const copyBtn = modal.querySelector('.btn-copy-message');
+    const whatsappBtn = modal.querySelector('.btn-open-whatsapp');
+
+    // Close modal
+    closeBtn.addEventListener('click', () => {
+        modal.remove();
+    });
+
+    // Close on overlay click
+    modal.querySelector('.modal-overlay').addEventListener('click', () => {
+        modal.remove();
+    });
+
+    // Copy message
+    copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(message).then(() => {
+            showNotification('Message copied to clipboard! 📋', 'success');
+            copyBtn.textContent = '✅ Copied!';
+            setTimeout(() => {
+                copyBtn.textContent = '📋 Copy Message';
+            }, 2000);
+        }).catch(() => {
+            showNotification('Failed to copy message', 'error');
+        });
+    });
+
+    // Open WhatsApp
+    whatsappBtn.addEventListener('click', () => {
+        const whatsappNumber = '918217791266';
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+        window.open(whatsappUrl, '_blank');
+        modal.remove();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function closeOnEscape(e) {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', closeOnEscape);
+        }
+    });
 }
 
 // Performance optimization - Throttle scroll events
