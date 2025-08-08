@@ -170,11 +170,11 @@ ${message}
 ---
 *Sent from:* Bhavani Silver Palace Website
 *Store:* Bhavani Silver Palace, Opposite to Med Plus, SS Puram Main Road, Tumkur
-*Contact:* +91 8095809559`;
+*Contact:* +91 8217791266`;
 
             // Encode message for WhatsApp
             const encodedMessage = encodeURIComponent(whatsappMessage);
-            const whatsappNumber = '918095809559'; // Your phone number
+            const whatsappNumber = '918217791266'; // Your testing phone number
             const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
             
             // Open WhatsApp
