@@ -135,7 +135,7 @@ function initBackToTop() {
     });
 }
 
-// Contact Form Handling
+// Contact Form Handling with WhatsApp Integration
 function initContactForm() {
     const contactForm = document.getElementById('contactForm');
 
@@ -156,8 +156,34 @@ function initContactForm() {
                 return;
             }
 
-            // Simulate form submission
-            showNotification('Thank you! Your message has been sent successfully.', 'success');
+            // Create WhatsApp message
+            const whatsappMessage = `*New Contact Form Submission from Bhavani Silver Palace Website*
+
+*Customer Details:*
+👤 *Name:* ${name}
+📧 *Email:* ${email}
+📱 *Phone:* ${phone}
+
+*Message:*
+${message}
+
+---
+*Sent from:* Bhavani Silver Palace Website
+*Store:* Bhavani Silver Palace, Opposite to Med Plus, SS Puram Main Road, Tumkur
+*Contact:* +91 8095809559`;
+
+            // Encode message for WhatsApp
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            const whatsappNumber = '918095809559'; // Your phone number
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            
+            // Open WhatsApp
+            window.open(whatsappUrl, '_blank');
+            
+            // Show success message
+            showNotification('Opening WhatsApp with your message! 📱', 'success');
+            
+            // Reset form
             this.reset();
         });
     }
