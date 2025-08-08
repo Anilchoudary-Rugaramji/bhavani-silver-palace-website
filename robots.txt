@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://bhavanisilverpalace.com/sitemap.xml
+
+# Disallow admin areas (if any are added in the future)
+# Disallow: /admin/
+# Disallow: /private/
+
+# Allow all content for now
+Allow: /assets/
+Allow: /images/
